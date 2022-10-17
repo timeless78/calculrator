@@ -38,8 +38,7 @@ export default {
     font-size: 1.6em;
     padding: 1em 0em 2em 0em;
   }
-  p:nth-child(2) {
-    word-break: break-all;
+  .title_task {
     font-size: 1.5em;
     font-weight: 600;
     letter-spacing: 1px;
@@ -47,7 +46,7 @@ export default {
     text-shadow: 1px 1px 1px black;
     padding: 0.3em 0 0.3em 0;
   }
-  p:nth-child(4) {
+  .title__task-bottom {
     word-break: break-all;
     font-size: 1.5em;
     font-weight: 600;
@@ -56,8 +55,13 @@ export default {
     padding: 0.3em 0 0.3em 0;
     text-shadow: 1px 1px 1px black;
   }
-  .title_task-total {
+  .title__task-left {
     font-size: 3.5em;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px black;
+  }
+  .title__task-total {
+    font-size: 1.5em;
     font-weight: 600;
     text-shadow: 2px 2px 4px black;
   }

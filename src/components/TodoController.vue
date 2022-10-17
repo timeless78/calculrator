@@ -2,7 +2,12 @@
   <div class="controller">
     <div class="select">
       <label for="order">Order</label>
-      <select name="order" id="order" class="selectbox">
+      <select
+        name="order"
+        id="order"
+        class="selectbox"
+        v-on:change="sortTodoList"
+      >
         <option value="date-asc">Date Ascending</option>
         <option value="date-desc">Date Descending</option>
         <option value="name-asc">Name Ascending</option>
@@ -25,6 +30,10 @@ export default {
   methods: {
     clearTodo: function () {
       this.$emit("clearItem");
+    },
+    sortTodoList: function (selected) {
+      //   console.log(selected.target.value);
+      this.$emit("sortItem", selected.target.value);
     },
   },
 };

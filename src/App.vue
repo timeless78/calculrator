@@ -6,7 +6,10 @@
       <TodoInput v-on:addItem="addNewTodoItem"></TodoInput>
     </div>
     <div class="bottom-content">
-      <TodoController v-on:clearItem="clearTodos"></TodoController>
+      <TodoController
+        v-on:clearItem="clearTodos"
+        v-on:sortItem="sortList"
+      ></TodoController>
       <TodoList
         v-bind:propsdata="todoList"
         v-on:toggleItem="toggleComplete"
@@ -94,6 +97,49 @@ export default {
     clearTodos: function () {
       this.todoList = [];
       localStorage.clear();
+    },
+    sortAsc(isdate) {
+      if (isdate) {
+        this.todoList.sort(function (a, b) {
+          return b.time - a.time;
+        });
+      } else {
+        this.todoList.sort((a, b) => {
+          const upperA = a.item.toUpperCase();
+          const upperB = b.item.toUpperCase();
+
+          if (upperA > upperB) return 1;
+          if (upperA < upperB) return -1;
+          if (upperA === upperB) return 0;
+        });
+      }
+    },
+    sortDesc(isdate) {
+      if (isdate) {
+        this.todoList.sort((a, b) => {
+          return b.time - a.time;
+        });
+      } else {
+        this.todoList.sort((a, b) => {
+          const upperA = a.item.toUpperCase();
+          const upperB = b.item.toUpperCase();
+
+          if (upperA < upperB) return 1;
+          if (upperA > upperB) return -1;
+          if (upperA === upperB) return 0;
+        });
+        this.todoList.reverse();
+      }
+    },
+    sortList: function (eventVal) {
+      if (eventVal === "date-asc" || eventVal === "name-asc") {
+        this.sortAsc(eventVal === "date-asc" ? true : false);
+      } else if (eventVal === "date-desc" || eventVal === "name-desc") {
+        this.sortDesc(eventVal === "date-desc" ? true : false);
+      }
+    },
+    mounted() {
+      this.sortAsc(true);
     },
   },
 };
