@@ -1,9 +1,15 @@
 <template>
   <div class="title">
     <p class="title_message">{{ message }}</p>
-    <p>You've got</p>
-    <span class="title_task-total">{{ taskTotal }}</span>
-    <p>tasks today !</p>
+    <p class="title_task">You've got</p>
+    <span class="title_task-total">
+      <em class="title__task-left">{{ propsdata.left }}</em>
+      <em v-if="propsdata.total" class="title__task-total">
+        &nbsp;/ {{ propsdata.total }}</em
+      >
+    </span>
+    <p class="title__task-bottom">tasks today !</p>
+    <span class="title__task-info"></span>
   </div>
 </template>
 
@@ -12,10 +18,11 @@ console.log("TodoTitle.vue");
 </script>
 <script>
 export default {
+  props: ["propsdata"],
   data() {
     return {
       message: "Good morning, nana!",
-      taskTotal: 5,
+      // taskTotal: 5,
     };
   },
 };

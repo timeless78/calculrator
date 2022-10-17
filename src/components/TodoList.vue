@@ -3,16 +3,16 @@
     <ul class="list">
       <li
         class="list__item"
-        v-for="todoItem in todoItems"
+        v-for="(todoItem, index) in propsdata"
         v-bind:key="todoItem"
       >
         <input
           type="checkbox"
-          v-bind:id="todoItems.item"
+          v-bind:id="todoItem.item"
           v-bind:checked="todoItem.completed === true"
           v-on:change="toggleComplete(todoItem)"
         />
-        <label v-bind:for="todoItems.item" class="list__label">
+        <label v-bind:for="todoItem.item" class="list__label">
           <p class="list__text">{{ todoItem.item }}</p>
         </label>
         <p class="list__date">{{ todoItem.date }}</p>
@@ -29,31 +29,13 @@ console.log("TodoList.vue");
 </script>
 <script>
 export default {
-  data() {
-    return {
-      todoItems: [],
-    };
-  },
-  created() {
-    if (localStorage.length > 0) {
-      for (var i = 0; i < localStorage.length; ++i) {
-        // console.log(localStorage.key(i));
-        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
-          this.todoItems.push(
-            JSON.parse(localStorage.getItem(localStorage.key(i)))
-          );
-        }
-      }
-    }
-  },
+  props: ["propsdata"],
   methods: {
     toggleComplete: function (todoItem) {
-      todoItem.completed = !todoItem.completed;
-      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+      this.$emit("toggleItem", todoItem);
     },
     removeTodo: function (todoItem, index) {
-      localStorage.removeItem(todoItem.item);
-      this.todoItems.splice(index, 1);
+      this.$emit("removeItem", todoItem, index);
     },
   },
 };

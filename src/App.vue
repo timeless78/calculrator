@@ -2,12 +2,16 @@
   <div>
     <div class="top-content">
       <TodoHeader></TodoHeader>
-      <TodoTitle user="nana"></TodoTitle>
-      <TodoInput></TodoInput>
+      <TodoTitle v-bind:propsdata="checkCount"></TodoTitle>
+      <TodoInput v-on:addItem="addNewTodoItem"></TodoInput>
     </div>
     <div class="bottom-content">
-      <TodoController></TodoController>
-      <TodoList></TodoList>
+      <TodoController v-on:clearItem="clearTodos"></TodoController>
+      <TodoList
+        v-bind:propsdata="todoList"
+        v-on:toggleItem="toggleComplete"
+        v-on:removeItem="removeTodo"
+      ></TodoList>
       <TodoFooter></TodoFooter>
     </div>
   </div>
@@ -20,9 +24,15 @@ import TodoInput from "./components/TodoInput.vue";
 import TodoController from "./components/TodoController.vue";
 import TodoList from "./components/TodoList.vue";
 import TodoFooter from "./components/TodoFooter.vue";
+import getDate from "./components/common/getDate.js";
 
 export default {
   name: "App",
+  data() {
+    return {
+      todoList: [],
+    };
+  },
   components: {
     TodoHeader,
     TodoTitle,
@@ -30,6 +40,61 @@ export default {
     TodoController,
     TodoList,
     TodoFooter,
+  },
+  created() {
+    if (localStorage.length > 0) {
+      for (var i = 0; i < localStorage.length; ++i) {
+        // console.log(localStorage.key(i));
+        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
+          this.todoList.push(
+            JSON.parse(localStorage.getItem(localStorage.key(i)))
+          );
+        }
+      }
+    }
+  },
+  computed: {
+    checkCount() {
+      const checkLeftItems = () => {
+        let leftCount = 0;
+        for (let i = 0; i < this.todoList.length; ++i) {
+          if (this.todoList[i].completed === false) {
+            leftCount++;
+          }
+        }
+        return leftCount;
+      };
+
+      const count = {
+        total: this.todoList.length,
+        left: checkLeftItems(),
+      };
+      return count;
+    },
+  },
+  methods: {
+    addNewTodoItem(todoItem) {
+      var value = {
+        item: todoItem,
+        date: `${getDate().date}/${getDate().week}`,
+        time: getDate().time,
+        completed: false,
+      };
+      localStorage.setItem(todoItem, JSON.stringify(value));
+      this.todoList.push(value);
+    },
+    toggleComplete: function (todoItem) {
+      todoItem.completed = !todoItem.completed;
+      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+    },
+    removeTodo: function (todoItem, index) {
+      localStorage.removeItem(todoItem.item);
+      this.todoList.splice(index, 1);
+    },
+    clearTodos: function () {
+      this.todoList = [];
+      localStorage.clear();
+    },
   },
 };
 </script>

@@ -15,7 +15,6 @@
 console.log("TodoInput.vue");
 </script>
 <script>
-import getDate from "./common/getDate.js";
 export default {
   data() {
     return {
@@ -25,13 +24,7 @@ export default {
   methods: {
     addTodoItem: function () {
       if (this.newTodoItem !== "") {
-        var value = {
-          item: this.newTodoItem,
-          date: `${getDate().date}/${getDate().week}`,
-          time: getDate().time,
-          completed: false,
-        };
-        localStorage.setItem(this.newTodoItem, JSON.stringify(value));
+        this.$emit("addItem", this.newTodoItem);
         this.clearInput();
       }
     },
