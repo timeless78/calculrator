@@ -1,6 +1,6 @@
 <template>
   <div class="title">
-    <p class="title_message">{{ message }}</p>
+    <p class="title_message">{{ checkHour }}</p>
     <p class="title_task">You've got</p>
     <span class="title_task-total">
       <em class="title__task-left">{{ propsdata.left }}</em>
@@ -24,6 +24,29 @@ export default {
       message: "Good morning, nana!",
       // taskTotal: 5,
     };
+  },
+  computed: {
+    checkHour() {
+      let msg = "";
+      var date = new Date();
+      const now = date.getHours();
+      if (now < 10) {
+        msg = "Good morning, nana!";
+      } else if (now >= 10 && now < 13) {
+        msg = "Good afternoon, nana!";
+      } else if (now >= 13 && now < 17) {
+        msg = "Good evening, nana!";
+      } else {
+        msg = "Good night, nana!";
+      }
+      console.log(msg);
+      return msg;
+    },
+  },
+  methods: {
+    mounted() {
+      this.message = this.checkHour();
+    },
   },
 };
 </script>
