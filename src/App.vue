@@ -4,7 +4,10 @@
       <TodoHeader></TodoHeader>
       <div v-if="userName">
         <TodoTitle v-bind:propsdata="checkCount"></TodoTitle>
-        <TodoInput v-on:addItem="addNewTodoItem"></TodoInput>
+        <TodoInput
+          v-on:addItem="addNewTodoItem"
+          v-on:alert="showModal"
+        ></TodoInput>
       </div>
       <div v-else>
         <TodoGreeding v-on:addUser="setupUser" />

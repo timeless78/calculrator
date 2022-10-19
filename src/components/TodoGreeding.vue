@@ -11,7 +11,7 @@
     <!-- <span class="icon-right-small"></span> -->
     <div class="main-input">
       <input
-        class="hello__input"
+        class="greeding__input"
         type="text"
         id="nickname"
         placeholder="Let me know your nick"
@@ -20,7 +20,7 @@
         required
         autofocus
       />
-      <button class="hello__button">
+      <button class="greeding__button">
         <span class="blind">Enter</span>
       </button>
     </div>

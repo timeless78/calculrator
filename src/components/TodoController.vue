@@ -1,7 +1,7 @@
 <template>
   <div class="controller">
     <div class="select">
-      <label for="order">Order</label>
+      <label class="blind" for="order">Order</label>
       <select
         name="order"
         id="order"
@@ -48,14 +48,10 @@ export default {
 <style lang="scss">
 .controller {
   max-width: $max-width;
-  padding: 1em 0 1em 0;
+  margin: 0 auto;
   @include flexbox;
   @include align-items(center);
   @include justify-content(space-between);
-
-  label {
-    display: none;
-  }
 
   .clear {
     letter-spacing: 0.03em;

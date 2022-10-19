@@ -8,8 +8,8 @@
         v-model="newTodoItem"
         v-on:keypress.enter="addTodoItem"
       />
-      <button class="hello__button">
-        <span class="blind">Enter</span>
+      <button class="add__button" v-on:click="addTodoItem">
+        <span class="blind">Add</span>
       </button>
     </div>
   </div>
@@ -30,6 +30,8 @@ export default {
       if (this.newTodoItem !== "") {
         this.$emit("addItem", this.newTodoItem);
         this.clearInput();
+      } else {
+        this.$emit("alert", "Please note a new todo!");
       }
     },
     clearInput() {
@@ -38,14 +40,14 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .add {
   position: relative;
   max-width: $max-width;
   margin: 0 auto;
 
-  &__input {
-    @include animation(fadeShow, 800ms, 1, 900ms);
+  .main-input {
+    @include animation(fadeShow, 850ms, 1, 1100ms);
   }
 }
 </style>
