@@ -1,19 +1,16 @@
 <template>
   <div id="app">
-    <AlertModal v-show="showModal" v-on:close="showModal=false">
-      <template v-slot:modal-text>{{ modalContext }}</template>
-    </AlertModal>
-    <div class="top-content">
+    <div class="top">
       <TodoHeader></TodoHeader>
       <div v-if="userName">
         <TodoTitle v-bind:propsdata="checkCount"></TodoTitle>
         <TodoInput v-on:addItem="addNewTodoItem"></TodoInput>
       </div>
       <div v-else>
-        <TodoGreeding v-on:addUser="setupUser"/>
+        <TodoGreeding v-on:addUser="setupUser" />
       </div>
     </div>
-    <div class="bottom-content">
+    <div class="body">
       <TodoController
         v-on:clearItem="clearTodos"
         v-on:sortItem="sortList"
@@ -25,6 +22,9 @@
       ></TodoList>
       <TodoFooter></TodoFooter>
     </div>
+    <AlertModal v-show="modalVisible" v-on:close="modalVisible = false">
+      <template v-slot:modal-text>{{ modalContext }}</template>
+    </AlertModal>
   </div>
 </template>
 
@@ -32,7 +32,7 @@
 import TodoHeader from "./components/TodoHeader.vue";
 import TodoTitle from "./components/TodoTitle.vue";
 import TodoInput from "./components/TodoInput.vue";
-import TodoGreeding from"./components/TodoGreeding.vue";
+import TodoGreeding from "./components/TodoGreeding.vue";
 import TodoController from "./components/TodoController.vue";
 import TodoList from "./components/TodoList.vue";
 import TodoFooter from "./components/TodoFooter.vue";
@@ -44,8 +44,8 @@ export default {
     return {
       todoList: [],
       userName: "nana",
-      showModal: false,
-      modalContext: ""
+      modalVisible: false,
+      modalContext: "",
     };
   },
   components: {
@@ -67,7 +67,7 @@ export default {
         if (localStorage.key(i) === "userName") {
           continue;
         }
-        if (localStorage.key(i) !== "loglevel:webpack-dev-server" ) {
+        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
           this.todoList.push(
             JSON.parse(localStorage.getItem(localStorage.key(i)))
           );
@@ -93,13 +93,17 @@ export default {
         nick: this.userName,
       };
       return count;
-    }
+    },
   },
   methods: {
     setupUser(arg) {
       // console.log(arg);
       this.userName = arg;
       localStorage.setItem("userName", arg);
+    },
+    showModal(text) {
+      this.modalVisible = !this.modalVisible;
+      this.modalContext = text;
     },
     addNewTodoItem(todoItem) {
       var value = {
@@ -110,8 +114,7 @@ export default {
       };
       localStorage.setItem(todoItem, JSON.stringify(value));
       this.todoList.push(value);
-      this.showModal = true;
-      this.modalText = "The form is empty. Please enter your task.";
+      // this.showModal("The form is empty. Please enter your task.");
     },
     toggleComplete: function (todoItem) {
       todoItem.completed = !todoItem.completed;
@@ -125,54 +128,29 @@ export default {
       this.todoList = [];
       localStorage.clear();
     },
-    sortAsc(isdate) {
-      if (isdate) {
-        this.todoList.sort(function (a, b) {
-          return b.time - a.time;
-        });
-      } else {
-        this.todoList.sort((a, b) => {
-          const upperA = a.item.toUpperCase();
-          const upperB = b.item.toUpperCase();
-
-          if (upperA > upperB) return 1;
-          if (upperA < upperB) return -1;
-          if (upperA === upperB) return 0;
-        });
-      }
+    sortAsc() {
+      this.todoList.sort(function (a, b) {
+        return b.time - a.time;
+      });
     },
-    sortDesc(isdate) {
-      if (isdate) {
-        this.todoList.sort((a, b) => {
-          return b.time - a.time;
-        });
-      } else {
-        this.todoList.sort((a, b) => {
-          const upperA = a.item.toUpperCase();
-          const upperB = b.item.toUpperCase();
-
-          if (upperA < upperB) return 1;
-          if (upperA > upperB) return -1;
-          if (upperA === upperB) return 0;
-        });
-        this.todoList.reverse();
-      }
+    sortDesc() {
+      this.todoList.sort((a, b) => {
+        return b.time - a.time;
+      });
     },
     sortList: function (eventVal) {
-      if (eventVal === "date-asc" || eventVal === "name-asc") {
-        this.sortAsc(eventVal === "date-asc" ? true : false);
-      } else if (eventVal === "date-desc" || eventVal === "name-desc") {
-        this.sortDesc(eventVal === "date-desc" ? true : false);
+      if (eventVal === "sortTodoLatest") {
+        this.sortDesc();
+      } else if (eventVal === "sortTodoOldest") {
+        this.sortAsc();
       }
-    },
-    mounted() {
-      this.sortAsc(true);
     },
   },
 };
 </script>
 
 <style lang="scss">
+@import "./assets/styles/reset.scss";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400&display=swap");
 
 #app {
@@ -182,21 +160,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: white;
 
-  .top-content {
-    background: linear-gradient(
-      to bottom right,
-      cornflowerblue,
-      rgb(220, 139, 236)
-    );
-    margin: 0;
-    padding: 0em 1em;
-    padding-bottom: 1em;
+  .top {
+    width: 100%;
+    min-height: 43.6em;
+    padding: 0 $padding 4.5em;
+    background: linear-gradient(145deg, #3770cc 20%, #ce91c9 84%);
+    //   to bottom right,
+    //   cornflowerblue,
+    //   rgb(220, 139, 236)
+    // );
   }
-  .bottom-content {
-    max-height: $max-height;
-    background-color: gainsboro;
-    margin: 0em;
-    padding: 1em;
+  .body {
+    padding: 3em $padding;
   }
 }
 </style>

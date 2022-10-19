@@ -1,7 +1,9 @@
 <template>
   <div id="header">
-    <h1 class="logo">My Todo</h1>
-    <p class="date">{{ timestamp }}</p>
+    <h1 class="logo">
+      <span class="blind">MyTodo</span>
+    </h1>
+    <p class="header__date">{{ timestamp }}</p>
   </div>
 </template>
 <script setup>
@@ -21,24 +23,28 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #header {
-  margin: 0em;
+  max-width: $max-width;
+  margin: 0em auto;
   padding: 1em 0 1em 0;
-  vertical-align: top;
-  font-size: small;
-  font-weight: 200;
-  line-height: 28px;
+  color: #fff;
+  @include flexbox;
+  @include align-items(center);
+  @include justify-content(space-between);
 
-  .logo {
-    font-size: medium;
-    font-weight: 400;
-    display: inline-block;
+  &__date {
+    letter-spacing: 0.02em;
+    font-size: 1.2em;
   }
-  .date {
-    text-align: right;
-    padding-right: 2em;
-    float: right;
-  }
+}
+
+.logo {
+  width: 5.8em;
+  height: 1.6em;
+  background-size: 100%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-image: icon("logo", "ffffff");
 }
 </style>

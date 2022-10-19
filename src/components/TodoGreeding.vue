@@ -1,57 +1,91 @@
 <template>
-    <div class="TodoGreeding">
-        <p class="greeding_message">{{ greedingMsg }}</p>
-        <p class="ask_message">{{askMsg}}</p>
-        <label for="user-name">Name<span class="icon-right-small"></span></label>
-        <input
-            class="input_username"
-            type="text"
-            id="nickname" 
-            placeholder="Enter your nickname" 
-            v-model="nickname"
-            v-on:keyup.enter="writeNickname"
-            required autofocus
-        >
+  <div class="greeding">
+    <p class="greeding__message">
+      <span class="greeding__message-text">Nice to meet you!</span>
+      <span class="greeding__message-text"
+        >I'm going to remember your tasks.</span
+      >
+    </p>
+    <p class="greeding__ask">{{ askMsg }}</p>
+    <label for="user-name">Name</label>
+    <!-- <span class="icon-right-small"></span> -->
+    <div class="main-input">
+      <input
+        class="hello__input"
+        type="text"
+        id="nickname"
+        placeholder="Let me know your nick"
+        v-model="nickname"
+        v-on:keyup.enter="writeNickname"
+        required
+        autofocus
+      />
+      <button class="hello__button">
+        <span class="blind">Enter</span>
+      </button>
     </div>
+  </div>
 </template>
 <script>
 export default {
-    data() {
-        return {
-            nickname: "Loem",
-            greedingMsg: "Welcome!",
-            askMsg: "What is your nickname?"
-        }
+  data() {
+    return {
+      nickname: "",
+      askMsg: "What is your nickname?",
+    };
+  },
+  methods: {
+    writeNickname: function () {
+      this.$emit("addUser", this.nickname);
     },
-    methods: {
-        writeNickname: function () {
-            this.$emit("addUser", this.nickname);
-        }
-    }
-}
+  },
+};
 </script>
 <style lang="scss">
-.TodoGreeding {
-    font-size:1.2em;
+.greeding {
+  max-width: $max-width;
+  margin: 0 auto;
+  letter-spacing: 0.03em;
+  color: #fff;
 
-    .greeding_message {
-        font-size:1.5em;
-        font-weight:600;
+  label {
+    display: none;
+  }
+
+  &__message {
+    padding-top: 2.4em;
+    margin-bottom: 6em;
+    font-size: 1.6em;
+    line-height: 1.75em;
+
+    &-text {
+      display: block;
     }
-    .ask_message {
-        font-weight:200;
-        margin-bottom: 1em;
-        line-height:28px;
+  }
+  &:first-child {
+    margin-top: 4em;
+  }
+  &__ask {
+    font-size: 2.8em;
+    font-weight: bold;
+    margin-bottom: 4em;
+  }
+}
+
+//애니메이션 관리
+.greeding {
+  &__message-text {
+    @for $i from 1 through 2 {
+      &:nth-child(#{$i}) {
+        @include animation(fadeShow, 450ms, 1, #{$i * 200}ms);
+      }
     }
-    .input_username {
-        margin-left: 10px;
-        border: 0px;
-        border-bottom: 1px dotted gray;
-        color: white;
-        background-color: inherit;
-    }
-    .input_username::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-    }
+  }
+  &__ask {
+    @include animation(fadeShow, 750ms, 1, 900ms);
+  }
+  .main-input {
+    @include animation(fadeShow, 850ms, 1, 1100ms);
+  }
 }
 </style>

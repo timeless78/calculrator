@@ -1,15 +1,25 @@
 <template>
   <div class="title">
-    <p class="title_message">{{ checkHour }}</p>
-    <p class="title_task">You've got</p>
-    <span class="title_task-total">
-      <em class="title__task-left">{{ propsdata.left }}</em>
-      <em v-if="propsdata.total" class="title__task-total">
-        &nbsp;/ {{ propsdata.total }}</em
-      >
-    </span>
-    <p class="title__task-bottom">tasks today !</p>
-    <span class="title__task-info"></span>
+    <p class="title__text">
+      <span class="title__message">Good {{ message }},&nbsp;</span>
+      <span class="title__name"> {{ this.propsdata.nick }}</span
+      >.
+    </p>
+    <p class="title__task">
+      <span class="title__task-top">You've got</span>
+      <span class="title__task-count">
+        <em class="title__task-left">{{ propsdata.left }}</em>
+        <em v-if="propsdata.total" class="title__task-total">
+          &nbsp;/ {{ propsdata.total }}</em
+        >
+      </span>
+      <span class="title__task-bottom">
+        <span v-if="this.propsdata.left > 1">tasks</span>
+        <span v-else>task</span>
+        today !
+      </span>
+      <span class="title__task-info"></span>
+    </p>
   </div>
 </template>
 
@@ -17,36 +27,19 @@
 console.log("TodoTitle.vue");
 </script>
 <script>
+import getDate from "@/components/common/getDate.js";
+
 export default {
   props: ["propsdata"],
   data() {
     return {
-      message: "Good morning, ",
+      message: "",
     };
   },
-  computed: {
-    checkHour() {
-      let msg = "";
-      let nick = this.propsdata.nick;
-      var date = new Date();
-      const now = date.getHours();
-      if (now < 12) {
-        msg = "Good morning, ";
-      } else if (now >= 12 && now < 18) {
-        msg = "Good afternoon, ";
-      } else if (now >= 18 && now < 23) {
-        msg = "Good evening, ";
-      } else {
-        msg = "Good night, ";
-      }
-      // console.log(msg);
-      return msg + nick;
-    },
-  },
-  methods: {
-    mounted() {
-      this.message = this.checkHour();
-    },
+  methods: {},
+  computed: {},
+  mounted() {
+    this.message = getDate().daytime;
   },
 };
 </script>
@@ -55,38 +48,86 @@ export default {
 .title {
   max-width: $max-width;
   margin: 0 auto;
+  letter-spacing: 0.03em;
+  color: #fff;
 
-  .title_message {
-    text-align: left;
+  &__text {
+    cursor: default;
     font-size: 1.6em;
-    padding: 1em 0em 2em 0em;
+    @include flexbox;
+    @include align-items(center);
+    @include flex-wrap(wrap);
+    @include ellipsis();
+
+    .wrap {
+      position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    &__message {
+      display: block;
+      min-height: 2.7em;
+      margin-right: 0.4em;
+      @include flex-shrink(0);
+    }
+
+    &__name {
+      display: block;
+      background: 0;
+      outline: 0;
+      color: inherit;
+      font-size: inherit;
+      min-width: 1em;
+      min-height: 2.7em;
+      overflow: hidden;
+      @include flex-shrink(1);
+
+      br {
+        display: none;
+      }
+      &:hover {
+        text-decoration: underline;
+        cursor: text;
+      }
+    }
   }
-  .title_task {
-    font-size: 1.5em;
-    font-weight: 600;
-    letter-spacing: 1px;
-    line-height: 10px;
-    text-shadow: 1px 1px 1px black;
-    padding: 0.3em 0 0.3em 0;
+  &__task {
+    margin-top: 3.5em;
+    margin-bottom: 5em;
+    font-weight: bold;
+
+    &-top {
+      display: block;
+      font-size: 2.6em;
+    }
+    &-count {
+      display: block;
+      font-size: 5.4em;
+    }
+    &-total {
+      font-size: 50%;
+    }
+    &-bottom {
+      display: block;
+      font-size: 2.6em;
+    }
   }
-  .title__task-bottom {
-    word-break: break-all;
-    font-size: 1.5em;
-    font-weight: 600;
-    letter-spacing: 1px;
-    line-height: 10px;
-    padding: 0.3em 0 0.3em 0;
-    text-shadow: 1px 1px 1px black;
+}
+
+// animation
+.title {
+  &__text {
+    @include animation(fadeShow, 500ms);
   }
-  .title__task-left {
-    font-size: 3.5em;
-    font-weight: 600;
-    text-shadow: 2px 2px 4px black;
+  &__task-top {
+    @include animation(fadeShow, 600ms, 1, 400ms);
   }
-  .title__task-total {
-    font-size: 1.5em;
-    font-weight: 600;
-    text-shadow: 2px 2px 4px black;
+  &__task-count {
+    @include animation(fadeShow, 600ms, 1, 550ms);
+  }
+  &__task-bottom {
+    @include animation(fadeShow, 600ms, 1, 700ms);
   }
 }
 </style>

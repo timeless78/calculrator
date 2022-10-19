@@ -7,9 +7,11 @@ module.exports = defineConfig({
     loaderOptions: {
       scss: {
         additionalData: `
-          @import "@/assets/styles/reset.scss";
           @import "@/assets/styles/_mixins.scss";
           @import "@/assets/styles/_variables.scss";
+          @import "@/assets/styles/_mediaQueries.scss";
+          @import "@/assets/styles/_svg.scss";
+          @import "@/assets/styles/_common.scss";
           @import "@/assets/fontello/css/arrow.css";
         `,
       },
