@@ -21,26 +21,26 @@ export default {
   props: ["propsdata"],
   data() {
     return {
-      message: "Good morning, nana!",
-      // taskTotal: 5,
+      message: "Good morning, ",
     };
   },
   computed: {
     checkHour() {
       let msg = "";
+      let nick = this.propsdata.nick;
       var date = new Date();
       const now = date.getHours();
-      if (now < 10) {
-        msg = "Good morning, nana!";
-      } else if (now >= 10 && now < 13) {
-        msg = "Good afternoon, nana!";
-      } else if (now >= 13 && now < 17) {
-        msg = "Good evening, nana!";
+      if (now < 12) {
+        msg = "Good morning, ";
+      } else if (now >= 12 && now < 18) {
+        msg = "Good afternoon, ";
+      } else if (now >= 18 && now < 23) {
+        msg = "Good evening, ";
       } else {
-        msg = "Good night, nana!";
+        msg = "Good night, ";
       }
-      console.log(msg);
-      return msg;
+      // console.log(msg);
+      return msg + nick;
     },
   },
   methods: {

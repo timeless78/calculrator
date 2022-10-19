@@ -5,7 +5,7 @@
       class="add__input"
       placeholder="Enter your task here"
       v-model="newTodoItem"
-      v-on:keyup.enter="addTodoItem"
+      v-on:keypress.enter="addTodoItem"
     />
     <button class="add__button icon-right-small"></button>
   </div>

@@ -1,9 +1,17 @@
 <template>
-  <div>
+  <div id="app">
+    <AlertModal v-show="showModal" v-on:close="showModal=false">
+      <template v-slot:modal-text>{{ modalContext }}</template>
+    </AlertModal>
     <div class="top-content">
       <TodoHeader></TodoHeader>
-      <TodoTitle v-bind:propsdata="checkCount"></TodoTitle>
-      <TodoInput v-on:addItem="addNewTodoItem"></TodoInput>
+      <div v-if="userName">
+        <TodoTitle v-bind:propsdata="checkCount"></TodoTitle>
+        <TodoInput v-on:addItem="addNewTodoItem"></TodoInput>
+      </div>
+      <div v-else>
+        <TodoGreeding v-on:addUser="setupUser"/>
+      </div>
     </div>
     <div class="bottom-content">
       <TodoController
@@ -24,31 +32,42 @@
 import TodoHeader from "./components/TodoHeader.vue";
 import TodoTitle from "./components/TodoTitle.vue";
 import TodoInput from "./components/TodoInput.vue";
+import TodoGreeding from"./components/TodoGreeding.vue";
 import TodoController from "./components/TodoController.vue";
 import TodoList from "./components/TodoList.vue";
 import TodoFooter from "./components/TodoFooter.vue";
 import getDate from "./components/common/getDate.js";
+import AlertModal from "./components/common/AlertModal.vue";
 
 export default {
-  name: "App",
   data() {
     return {
       todoList: [],
+      userName: "nana",
+      showModal: false,
+      modalContext: ""
     };
   },
   components: {
     TodoHeader,
     TodoTitle,
     TodoInput,
+    TodoGreeding,
     TodoController,
     TodoList,
     TodoFooter,
+    AlertModal,
   },
   created() {
+    this.userName = localStorage.getItem("userName");
+
     if (localStorage.length > 0) {
       for (var i = 0; i < localStorage.length; ++i) {
         // console.log(localStorage.key(i));
-        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
+        if (localStorage.key(i) === "userName") {
+          continue;
+        }
+        if (localStorage.key(i) !== "loglevel:webpack-dev-server" ) {
           this.todoList.push(
             JSON.parse(localStorage.getItem(localStorage.key(i)))
           );
@@ -71,11 +90,17 @@ export default {
       const count = {
         total: this.todoList.length,
         left: checkLeftItems(),
+        nick: this.userName,
       };
       return count;
-    },
+    }
   },
   methods: {
+    setupUser(arg) {
+      // console.log(arg);
+      this.userName = arg;
+      localStorage.setItem("userName", arg);
+    },
     addNewTodoItem(todoItem) {
       var value = {
         item: todoItem,
@@ -85,6 +110,8 @@ export default {
       };
       localStorage.setItem(todoItem, JSON.stringify(value));
       this.todoList.push(value);
+      this.showModal = true;
+      this.modalText = "The form is empty. Please enter your task.";
     },
     toggleComplete: function (todoItem) {
       todoItem.completed = !todoItem.completed;
