@@ -145,17 +145,17 @@
       display: none;
     }
     @font-face {
-      font-family: 'arrow';
-      src: url('./font/arrow.eot?86454908');
-      src: url('./font/arrow.eot?86454908#iefix') format('embedded-opentype'),
-           url('./font/arrow.woff?86454908') format('woff'),
-           url('./font/arrow.ttf?86454908') format('truetype'),
-           url('./font/arrow.svg?86454908#arrow') format('svg');
+      font-family: 'fontello';
+      src: url('./font/fontello.eot?18103110');
+      src: url('./font/fontello.eot?18103110#iefix') format('embedded-opentype'),
+           url('./font/fontello.woff?18103110') format('woff'),
+           url('./font/fontello.ttf?18103110') format('truetype'),
+           url('./font/fontello.svg?18103110#fontello') format('svg');
       font-weight: normal;
       font-style: normal;
     }
     .demo-icon {
-      font-family: "arrow";
+      font-family: "fontello";
       font-style: normal;
       font-weight: normal;
       speak: never;
@@ -204,15 +204,49 @@
   </head>
   <body>
     <div class="container header">
-      <h1>arrow <small>font demo</small></h1>
+      <h1>fontello <small>font demo</small></h1>
       <label class="switch">
         <input type="checkbox" onclick="toggleCodes(this.checked)">show codes
       </label>
     </div>
     <div class="container" id="icons">
       <div class="row">
+        <div class="span3" title="Code: 0xe800">
+          <i class="demo-icon icon-down-dir">&#xe800;</i> <span class="i-name">icon-down-dir</span><span class="i-code">0xe800</span>
+        </div>
+        <div class="span3" title="Code: 0xe801">
+          <i class="demo-icon icon-up-dir">&#xe801;</i> <span class="i-name">icon-up-dir</span><span class="i-code">0xe801</span>
+        </div>
+        <div class="span3" title="Code: 0xe802">
+          <i class="demo-icon icon-left-dir">&#xe802;</i> <span class="i-name">icon-left-dir</span><span class="i-code">0xe802</span>
+        </div>
         <div class="span3" title="Code: 0xe803">
-          <i class="demo-icon icon-right-small">&#xe803;</i> <span class="i-name">icon-right-small</span><span class="i-code">0xe803</span>
+          <i class="demo-icon icon-right-dir">&#xe803;</i> <span class="i-name">icon-right-dir</span><span class="i-code">0xe803</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe804">
+          <i class="demo-icon icon-off">&#xe804;</i> <span class="i-name">icon-off</span><span class="i-code">0xe804</span>
+        </div>
+        <div class="span3" title="Code: 0xf153">
+          <i class="demo-icon icon-euro">&#xf153;</i> <span class="i-name">icon-euro</span><span class="i-code">0xf153</span>
+        </div>
+        <div class="span3" title="Code: 0xf155">
+          <i class="demo-icon icon-dollar">&#xf155;</i> <span class="i-name">icon-dollar</span><span class="i-code">0xf155</span>
+        </div>
+        <div class="span3" title="Code: 0xf157">
+          <i class="demo-icon icon-yen">&#xf157;</i> <span class="i-name">icon-yen</span><span class="i-code">0xf157</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xf159">
+          <i class="demo-icon icon-won">&#xf159;</i> <span class="i-name">icon-won</span><span class="i-code">0xf159</span>
+        </div>
+        <div class="span3" title="Code: 0xf15a">
+          <i class="demo-icon icon-bitcoin">&#xf15a;</i> <span class="i-name">icon-bitcoin</span><span class="i-code">0xf15a</span>
+        </div>
+        <div class="span3" title="Code: 0xf1ec">
+          <i class="demo-icon icon-calc">&#xf1ec;</i> <span class="i-name">icon-calc</span><span class="i-code">0xf1ec</span>
         </div>
       </div>
     </div>

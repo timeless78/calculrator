@@ -1,0 +1,12 @@
+
+.icon-down-dir:before { content: '\e800'; } /* '' */
+.icon-up-dir:before { content: '\e801'; } /* '' */
+.icon-left-dir:before { content: '\e802'; } /* '' */
+.icon-right-dir:before { content: '\e803'; } /* '' */
+.icon-off:before { content: '\e804'; } /* '' */
+.icon-euro:before { content: '\f153'; } /* '' */
+.icon-dollar:before { content: '\f155'; } /* '' */
+.icon-yen:before { content: '\f157'; } /* '' */
+.icon-won:before { content: '\f159'; } /* '' */
+.icon-bitcoin:before { content: '\f15a'; } /* '' */
+.icon-calc:before { content: '\f1ec'; } /* '' */
