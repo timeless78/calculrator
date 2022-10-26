@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       totalFormular: [],
-      combineNumber: { pre: 0, now: 0 },
+      combineNumber: { old: 0, now: 0 },
       lastIndexofFormular: -1,
     };
   },
@@ -49,7 +49,7 @@ export default {
     },
     addFormular: function (arg, doUpdate = true) {
       this.lastIndexofFormular = this.totalFormular.push(arg) - 1;
-      this.combineNumber.pre = 0;
+      this.combineNumber.old = 0;
       this.combineNumber.now = 0;
 
       if (doUpdate) {
@@ -71,14 +71,14 @@ export default {
         this.addFormular(0, false);
       }
 
-      if (this.combineNumber.pre === 0) {
+      if (this.combineNumber.old === 0) {
         this.combineNumber.now = digit;
       } else {
-        this.combineNumber.now = this.combineNumber.pre * 10 + digit;
+        this.combineNumber.now = this.combineNumber.old * 10 + digit;
       }
 
       this.modifyFormular(this.combineNumber.now);
-      this.combineNumber.pre = this.combineNumber.now;
+      this.combineNumber.old = this.combineNumber.now;
     },
     processOperator: function (operator) {
       if (this.isLastDigitNumber()) {
