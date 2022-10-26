@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
+  <div id="mainframe">
     <div class="top">
       <CalcHeader />
-      <CalcScreen />
+      <div class="top__view">
+        <CalcScreen />
+      </div>
     </div>
     <div class="bottom">
       <CalcPad />
@@ -31,27 +33,31 @@ export default {
 @import "./assets/styles/reset.scss";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400&display=swap");
 
-#app {
+#mainframe {
   // font-family: Avenir, Helvetica, Arial, sans-serif;
   font-family: "Noto Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  // margin-top: 60px;
+  margin: 2em auto;
 }
 .top {
   width: $max-width;
-  height: $screen-height;
-  padding: 0 $padding 4.5rem;
+  // padding: 0 $padding 4.5rem;
   background-color: #61676d;
-  border: 3px sold black;
+  // border: 3px solid black;
+
+  &__view {
+    height: 15rem;
+  }
 }
 .bottom {
   width: $max-width;
   height: $pad-height;
-  padding: 3rem $padding;
+  // padding: 0rem $padding;
   background-color: #ada9a9;
-  border: 3px sold black;
+  // border: 3px solid black;
 }
 </style>
