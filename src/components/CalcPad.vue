@@ -66,6 +66,7 @@ export default {
     },
     runCalculate: function () {
       console.log("run calculate");
+      this.$emit("runEval");
     },
     clearVal: function () {
       console.log("clear all");

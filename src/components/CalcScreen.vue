@@ -7,7 +7,7 @@
     >
     </textarea>
     <div class="calcScreen__result">
-      <span>{{ numberProp }}</span>
+      <span>{{ resultNumber }}</span>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
 <script>
 export default {
   props: ["numberProp"],
-  expose: ["fomularScreen"],
+  expose: ["fomularScreen", "resultScreen"],
   data() {
     return {
       inputFormular: "",
@@ -35,6 +35,9 @@ export default {
       arrVal.forEach((element) => {
         this.inputFormular += element;
       });
+    },
+    resultScreen: function (resultVal) {
+      this.resultNumber = resultVal;
     },
   },
 };

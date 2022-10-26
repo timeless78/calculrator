@@ -12,6 +12,7 @@
         v-on:numberPushed="processNumber"
         v-on:operatorPushed="processOperator"
         v-on:allClear="processClear"
+        v-on:runEval="processEval"
       />
       <CalcFooter />
     </div>
@@ -89,6 +90,17 @@ export default {
     processClear: function () {
       this.totalFormular = [];
       this.addFormular(0);
+    },
+    processEval: function () {
+      let resultVal = 0;
+      // let operator = undefined;
+      this.totalFormular.forEach((element) => {
+        if (!isNaN(element)) {
+          resultVal += element;
+        }
+      });
+
+      this.$refs.calcScreen.resultScreen(resultVal);
     },
   },
 };
