@@ -2,27 +2,39 @@
   <div class="calcScreen">
     <textarea
       class="calcScreen__input"
-      v-model="inputNumber"
-      v-on:keypress="checkInputVal"
+      v-model="inputFormular"
+      v-on:input="onDataChanged"
     >
     </textarea>
     <div class="calcScreen__result">
-      <span>{{ resultNumber }}</span>
+      <span>{{ numberProp }}</span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: ["numberProp"],
+  expose: ["fomularScreen"],
   data() {
     return {
-      inputNumber: 10,
+      inputFormular: "",
       resultNumber: 0,
     };
   },
   methods: {
     checkInputVal: function (event) {
       this.inputNumber = event.target;
+    },
+    onDataChanged: function () {
+      console.log(this.inputFormular);
+    },
+    fomularScreen: function (arrVal) {
+      this.inputFormular = [];
+
+      arrVal.forEach((element) => {
+        this.inputFormular += element;
+      });
     },
   },
 };

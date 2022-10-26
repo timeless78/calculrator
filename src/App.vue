@@ -3,17 +3,23 @@
     <div class="top">
       <CalcHeader />
       <div class="top__view">
-        <CalcScreen />
+        <!-- <CalcScreen /> -->
+        <CalcScreen ref="calcScreen" />
       </div>
     </div>
     <div class="bottom">
-      <CalcPad />
+      <CalcPad
+        v-on:numberPushed="processNumber"
+        v-on:operatorPushed="processOperator"
+        v-on:allClear="processClear"
+      />
       <CalcFooter />
     </div>
   </div>
 </template>
 
 <script>
+// import { ref } from "vue";
 import CalcHeader from "./components/CalcHeader.vue";
 import CalcScreen from "./components/CalcScreen.vue";
 import CalcPad from "./components/CalcPad.vue";
@@ -25,6 +31,65 @@ export default {
     CalcScreen,
     CalcPad,
     CalcFooter,
+  },
+  data() {
+    return {
+      totalFormular: [],
+      combineNumber: { pre: 0, now: 0 },
+      lastIndexofFormular: -1,
+    };
+  },
+  mounted() {
+    this.addFormular(0);
+  },
+  methods: {
+    isLastDigitNumber: function () {
+      return !isNaN(this.totalFormular[this.lastIndexofFormular]);
+    },
+    addFormular: function (arg, doUpdate = true) {
+      this.lastIndexofFormular = this.totalFormular.push(arg) - 1;
+      this.combineNumber.pre = 0;
+      this.combineNumber.now = 0;
+
+      if (doUpdate) {
+        this.$refs.calcScreen.fomularScreen(this.totalFormular);
+      }
+
+      console.log(`Current formular is '${this.totalFormular}'!`);
+    },
+    modifyFormular: function (arg, doUpdate = true) {
+      this.totalFormular[this.lastIndexofFormular] = arg;
+      console.log(`Current formular is '${this.totalFormular}'!`);
+
+      if (doUpdate) {
+        this.$refs.calcScreen.fomularScreen(this.totalFormular);
+      }
+    },
+    processNumber: function (digit) {
+      if (!this.isLastDigitNumber()) {
+        this.addFormular(0, false);
+      }
+
+      if (this.combineNumber.pre === 0) {
+        this.combineNumber.now = digit;
+      } else {
+        this.combineNumber.now = this.combineNumber.pre * 10 + digit;
+      }
+
+      this.modifyFormular(this.combineNumber.now);
+      this.combineNumber.pre = this.combineNumber.now;
+    },
+    processOperator: function (operator) {
+      if (this.isLastDigitNumber()) {
+        this.addFormular(operator);
+      } else {
+        this.modifyFormular(operator);
+      }
+    },
+    processClear: function () {
+      this.totalFormular = [];
+      this.addFormular(0);
+    },
   },
 };
 </script>
@@ -41,7 +106,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   // margin-top: 60px;
-  margin: 2em auto;
+  margin: 1rem 1rem;
 }
 .top {
   width: $max-width;

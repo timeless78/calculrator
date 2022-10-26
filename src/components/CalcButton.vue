@@ -28,17 +28,24 @@ export default {
 </script>
 
 <style lang="scss">
-// .calcbutton {
-//   width: 5.3rem;
-//   height: 5.3rem;
-//   background-color: #fafafa;
-//   border-radius: 10px;
-//   background-size: 1.62rem 1.62rem;
-//   background-position: 50% 50%;
-//   background-repeat: no-repeat;
+input {
+  width: 7.5rem;
+  height: 5.3rem;
+  background-color: #fafafa;
+  border-radius: 20%;
+  border: 0px;
+  box-shadow: 1px 1px 1px gray;
+  cursor: Pointer;
+  font-size: 2rem;
+  text-shadow: 1px 1px 2px gray;
+  transition: transform color 0.1s;
 
-//   &:hover {
-//     font-weight: bold;
-//   }
-// }
+  &:hover {
+    font-weight: bold;
+  }
+  &:active {
+    transform: translateX(1px) translateY(1px);
+    box-shadow: 0px 0px 0px gray;
+  }
+}
 </style>
