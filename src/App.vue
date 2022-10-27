@@ -4,15 +4,17 @@
       <CalcHeader />
       <div class="top__view">
         <!-- <CalcScreen /> -->
-        <CalcScreen ref="calcScreen" />
+        <CalcScreen ref="calcScreen" v-bind:previewVal="getResult" />
+        <!-- <span>{{ temporaryResult }}</span> -->
       </div>
     </div>
     <div class="bottom">
       <CalcPad
         v-on:numberPushed="processNumber"
         v-on:operatorPushed="processOperator"
-        v-on:allClear="processClear"
-        v-on:runEval="processEval"
+        v-on:operatorBracket="processBracket"
+        v-on:buttonPushed="processButton"
+        v-on:runEval="updateScreen"
       />
       <CalcFooter />
     </div>
@@ -25,6 +27,8 @@ import CalcHeader from "./components/CalcHeader.vue";
 import CalcScreen from "./components/CalcScreen.vue";
 import CalcPad from "./components/CalcPad.vue";
 import CalcFooter from "./components/CalcFooter.vue";
+import CalcMath from "./components/common/calculation.js";
+import Equation from "./components/common/EquationArr.js";
 
 export default {
   components: {
@@ -35,40 +39,51 @@ export default {
   },
   data() {
     return {
-      totalFormular: [],
+      totalEquation: [],
       combineNumber: { old: 0, now: 0 },
-      lastIndexofFormular: -1,
+      lastIndexofEquation: -1,
+      resultVal: 0,
     };
   },
   mounted() {
-    this.addFormular(0);
+    this.combineNumber.old = 0;
+    this.combineNumber.now = 0;
+
+    this.totalEquation = Equation.getEquation();
+    Equation.appendObj(0);
+    this.lastIndexofEquation = Equation.getLength() - 1;
+
+    this.updateScreen();
+  },
+  computed: {
+    getResult() {
+      return this.temporaryResult();
+    },
   },
   methods: {
-    isLastDigitNumber: function () {
-      return !isNaN(this.totalFormular[this.lastIndexofFormular]);
+    getLastEquation() {
+      return this.totalEquation[this.lastIndexofEquation];
     },
-    addFormular: function (arg, doUpdate = true) {
-      this.lastIndexofFormular = this.totalFormular.push(arg) - 1;
+    addEquation: function (arg, doUpdate = true) {
+      this.lastIndexofEquation = this.totalEquation.push(arg) - 1;
       this.combineNumber.old = 0;
       this.combineNumber.now = 0;
 
       if (doUpdate) {
-        this.$refs.calcScreen.fomularScreen(this.totalFormular);
+        this.updateScreen();
       }
-
-      console.log(`Current formular is '${this.totalFormular}'!`);
     },
-    modifyFormular: function (arg, doUpdate = true) {
-      this.totalFormular[this.lastIndexofFormular] = arg;
-      console.log(`Current formular is '${this.totalFormular}'!`);
+    modifyEquation: function (arg, doUpdate = true) {
+      this.totalEquation[this.lastIndexofEquation] = arg;
 
       if (doUpdate) {
-        this.$refs.calcScreen.fomularScreen(this.totalFormular);
+        this.updateScreen();
       }
     },
     processNumber: function (digit) {
-      if (!this.isLastDigitNumber()) {
-        this.addFormular(0, false);
+      var last = this.getLastEquation();
+      if (CalcMath.isOperator(last)) {
+        this.addEquation(0, false);
       }
 
       if (this.combineNumber.old === 0) {
@@ -77,30 +92,50 @@ export default {
         this.combineNumber.now = this.combineNumber.old * 10 + digit;
       }
 
-      this.modifyFormular(this.combineNumber.now);
+      this.modifyEquation(this.combineNumber.now);
       this.combineNumber.old = this.combineNumber.now;
     },
     processOperator: function (operator) {
-      if (this.isLastDigitNumber()) {
-        this.addFormular(operator);
+      // 마지막 입력한 수식이 연산자 인지 피연산자 인지 판단하여 처리
+      var last = this.getLastEquation();
+      if (CalcMath.isOperator(last)) {
+        this.modifyEquation(operator);
       } else {
-        this.modifyFormular(operator);
+        this.addEquation(operator);
       }
     },
-    processClear: function () {
-      this.totalFormular = [];
-      this.addFormular(0);
-    },
-    processEval: function () {
-      let resultVal = 0;
-      // let operator = undefined;
-      this.totalFormular.forEach((element) => {
-        if (!isNaN(element)) {
-          resultVal += element;
-        }
-      });
+    processBracket: function (operator) {
+      var last = this.getLastEquation();
+      if (!CalcMath.isOperator(last)) {
+        this.addEquation("x", false);
+      }
 
-      this.$refs.calcScreen.resultScreen(resultVal);
+      // hasAlredyBracket();
+      this.addEquation(operator);
+    },
+    processButton: function (button) {
+      if (button === "clear") {
+        this.totalEquation = [];
+        this.addEquation(0, false);
+      } else if (button === "back") {
+        this.totalEquation.pop();
+      }
+
+      this.updateScreen();
+    },
+    temporaryResult() {
+      let infix = this.totalEquation;
+      // console.log("infix ==> ", infix);
+      let postfix = CalcMath.infixToPostfix(infix);
+      console.log("postfix ==> ", postfix);
+      let resultVal = CalcMath.calculate(postfix);
+      // console.log("result ==> ", resultVal);
+
+      return resultVal;
+    },
+    updateScreen() {
+      this.$refs.calcScreen.inputedScreen(this.totalEquation);
+      // this.$refs.calcScreen.resultScreen(this.getResult());
     },
   },
 };

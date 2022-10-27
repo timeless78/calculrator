@@ -4,9 +4,9 @@
       <table class="pads-buttons__table">
         <tr class="pads-buttons__table--row">
           <CalcButton v-bind:propsdata="'C'" v-on:doClicked="clearVal" />
-          <CalcButton v-bind:propsdata="'()'" v-on:doClicked="keypressed" />
-          <CalcButton v-bind:propsdata="'%'" v-on:doClicked="keypressed" />
-          <CalcButton v-bind:propsdata="'÷'" v-on:doClicked="keypressed" />
+          <CalcButton v-bind:propsdata="'←'" v-on:doClicked="buttonpressed" />
+          <CalcButton v-bind:propsdata="'()'" v-on:doClicked="bracketpressed" />
+          <CalcButton v-bind:propsdata="'÷'" v-on:doClicked="operatorpressed" />
         </tr>
         <tr class="pads-buttons__table--row">
           <!-- create button and assign value to each button -->
@@ -14,19 +14,19 @@
           <CalcButton v-bind:propsdata="'7'" v-on:doClicked="keypressed" />
           <CalcButton v-bind:propsdata="'8'" v-on:doClicked="keypressed" />
           <CalcButton v-bind:propsdata="'9'" v-on:doClicked="keypressed" />
-          <CalcButton v-bind:propsdata="'x'" v-on:doClicked="keypressed" />
+          <CalcButton v-bind:propsdata="'x'" v-on:doClicked="operatorpressed" />
         </tr>
         <tr class="pads-buttons__table--row">
           <CalcButton v-bind:propsdata="'4'" v-on:doClicked="keypressed" />
           <CalcButton v-bind:propsdata="'5'" v-on:doClicked="keypressed" />
           <CalcButton v-bind:propsdata="'6'" v-on:doClicked="keypressed" />
-          <CalcButton v-bind:propsdata="'-'" v-on:doClicked="keypressed" />
+          <CalcButton v-bind:propsdata="'-'" v-on:doClicked="operatorpressed" />
         </tr>
         <tr class="pads-buttons__table--row">
           <CalcButton v-bind:propsdata="'1'" v-on:doClicked="keypressed" />
           <CalcButton v-bind:propsdata="'2'" v-on:doClicked="keypressed" />
           <CalcButton v-bind:propsdata="'3'" v-on:doClicked="keypressed" />
-          <CalcButton v-bind:propsdata="'+'" v-on:doClicked="keypressed" />
+          <CalcButton v-bind:propsdata="'+'" v-on:doClicked="operatorpressed" />
         </tr>
         <tr class="pads-buttons__table--row">
           <CalcButton v-bind:propsdata="'+/-'" v-on:doClicked="keypressed" />
@@ -56,21 +56,23 @@ export default {
       let number = Number(e);
       if (!isNaN(number)) {
         this.$emit("numberPushed", number);
-      } else {
-        if (e === "+" || e === "-" || e === "x" || e === "÷" || e === "%") {
-          this.$emit("operatorPushed", e);
-        } else if (e === "()") {
-          console.log("operator () pushed");
-        }
       }
+    },
+    operatorpressed: function (e) {
+      this.$emit("operatorPushed", e);
+    },
+    bracketpressed: function (e) {
+      this.$emit("operatorBracket", e);
+    },
+    buttonpressed: function () {
+      this.$emit("buttonPushed", "back");
+    },
+    clearVal: function () {
+      this.$emit("buttonPushed", "clear");
     },
     runCalculate: function () {
       console.log("run calculate");
       this.$emit("runEval");
-    },
-    clearVal: function () {
-      console.log("clear all");
-      this.$emit("allClear");
     },
   },
 };
