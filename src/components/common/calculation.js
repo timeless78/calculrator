@@ -1,7 +1,7 @@
 const getPriority = (operator, inStack) => {
   if (operator === "+" || operator === "-") {
     return 1;
-  } else if (operator === "*" || operator === "/") {
+  } else if (operator === "x" || operator === "÷") {
     return 2;
   } else if (operator === "(") {
     if (inStack) return 0;
@@ -26,7 +26,9 @@ const infixToPostfix = (infix) => {
 
   infix.forEach((token) => {
     if (isOperator(token)) {
-      if (token === ")") {
+      if (token === "(") {
+        stack.push(token);
+      } else if (token === ")") {
         // 토큰이 ')' 연산자인 경우, '('를 만날 때까지 Postfix에 삽입
         let popped = stack.pop();
         while (popped !== "(") {
@@ -38,9 +40,11 @@ const infixToPostfix = (infix) => {
           stack.push(token);
         } else {
           // 마지막 노드와 토큰의 우선순위 비교
-          let last = stack.slice(-1);
-          if (getPriority(last, true) >= getPriority(token, false)) {
-            postfix.push(stack.pop());
+          let popped = stack.pop();
+          if (getPriority(popped, true) >= getPriority(token, false)) {
+            postfix.push(popped);
+          } else {
+            stack.push(popped);
           }
           stack.push(token);
         }
@@ -51,7 +55,7 @@ const infixToPostfix = (infix) => {
     }
   });
 
-  console.log("stack is ", stack);
+  // console.log("stack is ", stack);
 
   // 스택의 남은 노드(연산자)를 모두 후위에 붙임
   while (stack.length !== 0) {
@@ -62,6 +66,10 @@ const infixToPostfix = (infix) => {
 };
 
 const calculate = (postfix) => {
+  if (postfix.length < 2) {
+    return;
+  }
+
   const stack = [];
 
   postfix.split(" ").forEach((token) => {
@@ -84,6 +92,12 @@ const calculate = (postfix) => {
   return stack[0];
 };
 
-const convertCalc = { isOperator, isOperand, infixToPostfix, calculate };
+const convertCalc = {
+  getPriority,
+  isOperator,
+  isOperand,
+  infixToPostfix,
+  calculate,
+};
 
 export default convertCalc;

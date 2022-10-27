@@ -7,7 +7,7 @@
     >
     </textarea>
     <div class="calcScreen__result">
-      <span>{{ previewVal }}</span>
+      <span>{{ resultNumber }}</span>
     </div>
   </div>
 </template>
@@ -38,6 +38,8 @@ export default {
     },
     resultScreen: function (resultVal) {
       this.resultNumber = resultVal;
+
+      //   console.log("resultScreen : ", resultVal);
     },
   },
 };

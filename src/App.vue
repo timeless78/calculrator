@@ -5,7 +5,6 @@
       <div class="top__view">
         <!-- <CalcScreen /> -->
         <CalcScreen ref="calcScreen" v-bind:previewVal="getResult" />
-        <!-- <span>{{ temporaryResult }}</span> -->
       </div>
     </div>
     <div class="bottom">
@@ -39,7 +38,7 @@ export default {
   },
   data() {
     return {
-      totalEquation: [],
+      infix: [],
       combineNumber: { old: 0, now: 0 },
       lastIndexofEquation: -1,
       resultVal: 0,
@@ -49,93 +48,90 @@ export default {
     this.combineNumber.old = 0;
     this.combineNumber.now = 0;
 
-    this.totalEquation = Equation.getEquation();
+    this.infix = Equation.getEquation();
     Equation.appendObj(0);
-    this.lastIndexofEquation = Equation.getLength() - 1;
 
     this.updateScreen();
   },
   computed: {
     getResult() {
-      return this.temporaryResult();
+      let postfix = this.computeResult();
+      console.log(postfix);
+      return CalcMath.calculate(postfix);
     },
   },
   methods: {
-    getLastEquation() {
-      return this.totalEquation[this.lastIndexofEquation];
-    },
-    addEquation: function (arg, doUpdate = true) {
-      this.lastIndexofEquation = this.totalEquation.push(arg) - 1;
-      this.combineNumber.old = 0;
-      this.combineNumber.now = 0;
-
-      if (doUpdate) {
-        this.updateScreen();
-      }
-    },
-    modifyEquation: function (arg, doUpdate = true) {
-      this.totalEquation[this.lastIndexofEquation] = arg;
-
-      if (doUpdate) {
-        this.updateScreen();
-      }
+    computeResult() {
+      return CalcMath.infixToPostfix(this.infix);
     },
     processNumber: function (digit) {
-      var last = this.getLastEquation();
-      if (CalcMath.isOperator(last)) {
-        this.addEquation(0, false);
-      }
+      if (Equation.isNumberofLastObj()) {
+        if (this.combineNumber.old === 0) {
+          this.combineNumber.now = digit;
+        } else {
+          this.combineNumber.now = this.combineNumber.old * 10 + digit;
+        }
 
-      if (this.combineNumber.old === 0) {
-        this.combineNumber.now = digit;
+        Equation.modifyLastObj(this.combineNumber.now);
+        this.combineNumber.old = this.combineNumber.now;
       } else {
-        this.combineNumber.now = this.combineNumber.old * 10 + digit;
-      }
-
-      this.modifyEquation(this.combineNumber.now);
-      this.combineNumber.old = this.combineNumber.now;
-    },
-    processOperator: function (operator) {
-      // 마지막 입력한 수식이 연산자 인지 피연산자 인지 판단하여 처리
-      var last = this.getLastEquation();
-      if (CalcMath.isOperator(last)) {
-        this.modifyEquation(operator);
-      } else {
-        this.addEquation(operator);
-      }
-    },
-    processBracket: function (operator) {
-      var last = this.getLastEquation();
-      if (!CalcMath.isOperator(last)) {
-        this.addEquation("x", false);
-      }
-
-      // hasAlredyBracket();
-      this.addEquation(operator);
-    },
-    processButton: function (button) {
-      if (button === "clear") {
-        this.totalEquation = [];
-        this.addEquation(0, false);
-      } else if (button === "back") {
-        this.totalEquation.pop();
+        Equation.appendObj(digit);
+        this.combineNumber.old = digit;
       }
 
       this.updateScreen();
     },
-    temporaryResult() {
-      let infix = this.totalEquation;
-      // console.log("infix ==> ", infix);
-      let postfix = CalcMath.infixToPostfix(infix);
-      console.log("postfix ==> ", postfix);
-      let resultVal = CalcMath.calculate(postfix);
-      // console.log("result ==> ", resultVal);
+    processOperator: function (operator) {
+      // 마지막 입력한 수식이 연산자 인지 피연산자 인지 판단하여 처리
+      var last = Equation.getLastObj();
+      if (CalcMath.isOperator(last)) {
+        Equation.modifyLastObj(operator);
+      } else {
+        Equation.appendObj(operator);
+      }
 
-      return resultVal;
+      this.combineNumber.old = 0;
+      this.combineNumber.now = 0;
+
+      this.updateScreen();
+    },
+    processBracket: function () {
+      var targetOP = "(";
+      if (
+        this.infix.find((element) => {
+          return element === "(";
+        }) !== undefined
+      ) {
+        targetOP = ")";
+      }
+      console.log("targetOP : ", targetOP);
+      if (Equation.isNumberofLastObj() && targetOP === "(") {
+        Equation.appendObj("x");
+      }
+
+      Equation.appendObj(targetOP);
+      this.updateScreen();
+    },
+    processButton: function (button) {
+      if (button === "clear") {
+        this.combineNumber.old = 0;
+        this.combineNumber.now = 0;
+
+        Equation.clear();
+        Equation.appendObj(0);
+      } else if (button === "back") {
+        // this.totalEquation.pop();
+      }
+
+      this.updateScreen();
     },
     updateScreen() {
-      this.$refs.calcScreen.inputedScreen(this.totalEquation);
-      // this.$refs.calcScreen.resultScreen(this.getResult());
+      this.$refs.calcScreen.inputedScreen(this.infix);
+
+      let postfix = this.computeResult();
+      console.log(postfix);
+      let out = CalcMath.calculate(postfix);
+      this.$refs.calcScreen.resultScreen(out);
     },
   },
 };

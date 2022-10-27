@@ -10,12 +10,19 @@ const toString = () => {
   return outStr;
 };
 
-const isValid = () => {
-  return true;
+const isNumberofLastObj = () => {
+  var lastObj = getLastObj();
+  //   console.log("isNumberofLastObj is ", !isNaN(Number(lastObj)) ? true : false);
+  return !isNaN(Number(lastObj));
 };
 
-let getEquation = () => {
+const getEquation = () => {
   return EquationArr;
+};
+
+const clear = () => {
+  EquationArr = [];
+  return getEquation();
 };
 
 const getLastObj = () => {
@@ -25,9 +32,11 @@ const getLength = () => {
   return EquationArr.length;
 };
 
+const modifyLastObj = (obj) => {
+  EquationArr[getLength() - 1] = obj;
+};
+
 const appendObj = (obj) => {
-  var test = isValid();
-  console.log(test);
   EquationArr.push(obj);
 };
 
@@ -37,9 +46,12 @@ const removeObj = (obj) => {
 
 const equationObj = {
   toString,
+  clear,
+  isNumberofLastObj,
   getEquation,
   getLastObj,
   getLength,
+  modifyLastObj,
   appendObj,
   removeObj,
 };

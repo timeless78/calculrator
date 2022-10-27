@@ -61,8 +61,8 @@ export default {
     operatorpressed: function (e) {
       this.$emit("operatorPushed", e);
     },
-    bracketpressed: function (e) {
-      this.$emit("operatorBracket", e);
+    bracketpressed: function () {
+      this.$emit("operatorBracket");
     },
     buttonpressed: function () {
       this.$emit("buttonPushed", "back");
