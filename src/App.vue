@@ -45,8 +45,7 @@ export default {
     };
   },
   mounted() {
-    this.combineNumber.old = 0;
-    this.combineNumber.now = 0;
+    this.InitInputedNumber();
 
     this.infix = Equation.getEquation();
     Equation.appendObj(0);
@@ -55,14 +54,16 @@ export default {
   },
   computed: {
     getResult() {
-      let postfix = this.computeResult();
-      console.log(postfix);
-      return CalcMath.calculate(postfix);
+      return CalcMath.calculate(this.computeResult());
     },
   },
   methods: {
     computeResult() {
       return CalcMath.infixToPostfix(this.infix);
+    },
+    InitInputedNumber() {
+      this.combineNumber.old = 0;
+      this.combineNumber.now = 0;
     },
     processNumber: function (digit) {
       if (Equation.isNumberofLastObj()) {
@@ -90,9 +91,7 @@ export default {
         Equation.appendObj(operator);
       }
 
-      this.combineNumber.old = 0;
-      this.combineNumber.now = 0;
-
+      this.InitInputedNumber();
       this.updateScreen();
     },
     processBracket: function () {
@@ -114,8 +113,7 @@ export default {
     },
     processButton: function (button) {
       if (button === "clear") {
-        this.combineNumber.old = 0;
-        this.combineNumber.now = 0;
+        this.InitInputedNumber();
 
         Equation.clear();
         Equation.appendObj(0);
@@ -128,9 +126,7 @@ export default {
     updateScreen() {
       this.$refs.calcScreen.inputedScreen(this.infix);
 
-      let postfix = this.computeResult();
-      console.log(postfix);
-      let out = CalcMath.calculate(postfix);
+      let out = CalcMath.calculate(this.computeResult());
       this.$refs.calcScreen.resultScreen(out);
     },
   },
