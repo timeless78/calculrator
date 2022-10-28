@@ -115,10 +115,10 @@ export default {
       if (button === "clear") {
         this.InitInputedNumber();
 
-        Equation.clear();
+        this.infix = Equation.clear();
         Equation.appendObj(0);
       } else if (button === "back") {
-        // this.totalEquation.pop();
+        Equation.removeLastObj();
       }
 
       this.updateScreen();

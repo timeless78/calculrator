@@ -40,8 +40,8 @@ const appendObj = (obj) => {
   EquationArr.push(obj);
 };
 
-const removeObj = (obj) => {
-  EquationArr.push(obj);
+const removeLastObj = () => {
+  return EquationArr.pop();
 };
 
 const equationObj = {
@@ -53,6 +53,6 @@ const equationObj = {
   getLength,
   modifyLastObj,
   appendObj,
-  removeObj,
+  removeLastObj,
 };
 export default equationObj;
