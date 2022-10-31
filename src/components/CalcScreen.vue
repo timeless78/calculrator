@@ -7,7 +7,9 @@
     >
     </textarea>
     <div class="calcScreen__result">
-      <span>{{ resultNumber }}</span>
+      <span :class="{ boldVal: isPreviewVal !== true }">{{
+        resultNumber
+      }}</span>
     </div>
   </div>
 </template>
@@ -19,7 +21,8 @@ export default {
   data() {
     return {
       inputFormular: "",
-      resultNumber: 0,
+      resultNumber: undefined,
+      isPreviewVal: 0,
     };
   },
   methods: {
@@ -27,7 +30,7 @@ export default {
       this.inputNumber = event.target;
     },
     onDataChanged: function () {
-      console.log(this.inputFormular);
+      console.log("log: onDataChanged --> ", this.inputFormular);
     },
     inputedScreen: function (arrVal) {
       this.inputFormular = "";
@@ -36,10 +39,14 @@ export default {
         this.inputFormular += `${element}`;
       });
     },
-    resultScreen: function (resultVal) {
+    resultScreen: function (resultVal, isPrevVal) {
+      this.isPreviewVal = isPrevVal;
       this.resultNumber = resultVal;
 
-      //   console.log("resultScreen : ", resultVal);
+      // console.log(
+      //   "resultScreen : ",
+      //   resultVal + " ,-> isPrevVla? " + isPrevVal ? "true" : "false"
+      // );
     },
   },
 };
@@ -77,6 +84,12 @@ export default {
     padding: 0px auto;
     border: 2px solid yellow;
     border-radius: 5px;
+
+    .boldVal {
+      color: white;
+      font-size: 1.8em;
+      font-weight: bold;
+    }
   }
 }
 </style>

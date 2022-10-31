@@ -3,11 +3,7 @@
 let EquationArr = new Array(0);
 
 const toString = () => {
-  var outStr = "";
-  EquationArr.forEach((element) => {
-    outStr += `${element} `;
-  });
-  return outStr;
+  return EquationArr.join(",");
 };
 
 const isNumberofLastObj = () => {

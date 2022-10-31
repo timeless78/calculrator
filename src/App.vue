@@ -9,11 +9,11 @@
     </div>
     <div class="bottom">
       <CalcPad
-        v-on:numberPushed="processNumber"
-        v-on:operatorPushed="processOperator"
-        v-on:operatorBracket="processBracket"
-        v-on:buttonPushed="processButton"
-        v-on:runEval="updateScreen"
+        v-on:numberPushed="computeOperand"
+        v-on:operatorPushed="computeOperator"
+        v-on:operatorBracket="computeBracket"
+        v-on:buttonPushed="runSysFuncts"
+        v-on:runEval="showResult"
       />
       <CalcFooter />
     </div>
@@ -39,50 +39,51 @@ export default {
   data() {
     return {
       infix: [],
-      combineNumber: { old: 0, now: 0 },
-      lastIndexofEquation: -1,
-      resultVal: 0,
+      postfix: "",
+      currentDigit: { old: 0, now: 0 },
+      prevResultVal: 0,
     };
   },
   mounted() {
     this.InitInputedNumber();
 
     this.infix = Equation.getEquation();
-    Equation.appendObj(0);
+    // Equation.appendObj(0);
 
     this.updateScreen();
   },
   computed: {
     getResult() {
-      return CalcMath.calculate(this.computeResult());
+      return CalcMath.calculate(this.postfix);
     },
   },
   methods: {
-    computeResult() {
-      return CalcMath.infixToPostfix(this.infix);
-    },
     InitInputedNumber() {
-      this.combineNumber.old = 0;
-      this.combineNumber.now = 0;
+      this.currentDigit.old = 0;
+      this.currentDigit.now = 0;
     },
-    processNumber: function (digit) {
+    computeOperand: function (digit) {
       if (Equation.isNumberofLastObj()) {
-        if (this.combineNumber.old === 0) {
-          this.combineNumber.now = digit;
+        if (this.currentDigit.old === 0) {
+          this.currentDigit.now = digit;
         } else {
-          this.combineNumber.now = this.combineNumber.old * 10 + digit;
+          this.currentDigit.now = this.currentDigit.old * 10 + digit;
         }
 
-        Equation.modifyLastObj(this.combineNumber.now);
-        this.combineNumber.old = this.combineNumber.now;
+        if (Equation.getLength() < 1) {
+          Equation.appendObj(this.currentDigit.now);
+        } else {
+          Equation.modifyLastObj(this.currentDigit.now);
+        }
+        this.currentDigit.old = this.currentDigit.now;
       } else {
         Equation.appendObj(digit);
-        this.combineNumber.old = digit;
+        this.currentDigit.old = digit;
       }
 
       this.updateScreen();
     },
-    processOperator: function (operator) {
+    computeOperator: function (operator) {
       // 마지막 입력한 수식이 연산자 인지 피연산자 인지 판단하여 처리
       var last = Equation.getLastObj();
       if (CalcMath.isOperator(last)) {
@@ -94,40 +95,51 @@ export default {
       this.InitInputedNumber();
       this.updateScreen();
     },
-    processBracket: function () {
-      var targetOP = "(";
+    computeBracket: function () {
+      var bracket = "(";
       if (
         this.infix.find((element) => {
           return element === "(";
         }) !== undefined
       ) {
-        targetOP = ")";
+        bracket = ")";
       }
-      console.log("targetOP : ", targetOP);
-      if (Equation.isNumberofLastObj() && targetOP === "(") {
+      // console.log("bracket : ", bracket);
+      if (Equation.getLength() > 0 && bracket === "(") {
         Equation.appendObj("x");
       }
 
-      Equation.appendObj(targetOP);
+      Equation.appendObj(bracket);
       this.updateScreen();
     },
-    processButton: function (button) {
+    runSysFuncts: function (button) {
       if (button === "clear") {
         this.InitInputedNumber();
 
         this.infix = Equation.clear();
-        Equation.appendObj(0);
+        // Equation.appendObj(0);
       } else if (button === "back") {
         Equation.removeLastObj();
       }
 
       this.updateScreen();
     },
+    showResult() {
+      let outResult = CalcMath.calculate(this.postfix);
+      if (isNaN(outResult)) {
+        outResult = "";
+      }
+      this.$refs.calcScreen.resultScreen(outResult, false);
+    },
     updateScreen() {
       this.$refs.calcScreen.inputedScreen(this.infix);
 
-      let out = CalcMath.calculate(this.computeResult());
-      this.$refs.calcScreen.resultScreen(out);
+      this.postfix = CalcMath.infixToPostfix(this.infix);
+      let outResult = CalcMath.calculate(this.postfix);
+      if (isNaN(outResult)) {
+        outResult = "";
+      }
+      this.$refs.calcScreen.resultScreen(outResult, true);
     },
   },
 };
