@@ -41,7 +41,6 @@ export default {
       infix: [],
       postfix: "",
       currentDigit: "",
-      prevResultVal: 0,
     };
   },
   mounted() {
