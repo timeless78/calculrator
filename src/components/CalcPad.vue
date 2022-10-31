@@ -56,6 +56,8 @@ export default {
       let number = Number(e);
       if (!isNaN(number)) {
         this.$emit("numberPushed", number);
+      } else {
+        this.$emit("numberPushed", e);
       }
     },
     operatorpressed: function (e) {
